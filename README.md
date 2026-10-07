@@ -38,7 +38,7 @@ Ngữ pháp thêm trong `src/data/grammar.js`.
 ## Nút liên hệ
 Nút "Liên hệ" nổi ở góc dưới bên phải, bấm vào sẽ mở link trong tab mới. Đổi link trong `src/config.js`:
 ```js
-export const CONTACT_URL = 'https://zalo.me/0912345678'
+export const CONTACT_URL = 'https://www.facebook.com/z.nguyentiendung'
 ```
 Hoặc truyền khi build, không cần sửa code:
 ```bash
