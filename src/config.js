@@ -7,7 +7,7 @@
 // Có thể đặt bằng biến môi trường khi build: VITE_CONTACT_URL=https://... npm run build
 // Để trống ('') thì nút liên hệ sẽ bị ẩn.
 
-export const CONTACT_URL = import.meta.env.VITE_CONTACT_URL || 'https://example.com/lien-he'
+export const CONTACT_URL = import.meta.env.VITE_CONTACT_URL || 'https://www.facebook.com/z.nguyentiendung'
 
 // Chữ hiển thị trên nút
 export const CONTACT_LABEL = import.meta.env.VITE_CONTACT_LABEL || 'Liên hệ'

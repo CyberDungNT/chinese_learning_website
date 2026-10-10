@@ -158,22 +158,84 @@ export function MiGrid({ char, size = 260 }) {
   )
 }
 
+// Thanh tab cuộn ngang: tự đưa tab đang chọn vào tầm nhìn và hiện mũi tên khi còn tab bị khuất
+export function TabBar({ value, id, label, className = '', children }) {
+  const ref = useRef(null)
+  const [edges, setEdges] = useState({ left: false, right: false })
+
+  useEffect(() => {
+    const bar = ref.current
+    if (!bar) return undefined
+    const update = () => {
+      const max = bar.scrollWidth - bar.clientWidth
+      setEdges({ left: bar.scrollLeft > 4, right: bar.scrollLeft < max - 4 })
+    }
+    update()
+    bar.addEventListener('scroll', update, { passive: true })
+    const ro = new ResizeObserver(update)
+    ro.observe(bar)
+    return () => {
+      bar.removeEventListener('scroll', update)
+      ro.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    const bar = ref.current
+    const el = bar?.querySelector('.mode-btn.active')
+    if (!bar || !el || bar.scrollWidth <= bar.clientWidth) return
+    const left = el.offsetLeft - (bar.clientWidth - el.offsetWidth) / 2
+    bar.scrollTo({ left: Math.max(0, left), behavior: 'smooth' })
+  }, [value])
+
+  const nudge = (dir) => {
+    const bar = ref.current
+    if (bar) bar.scrollBy({ left: dir * bar.clientWidth * 0.7, behavior: 'smooth' })
+  }
+  const arrow = (dir) => (
+    <button
+      type="button"
+      className={`tabs-arrow ${dir < 0 ? 'left' : 'right'}`}
+      aria-label={dir < 0 ? 'Xem các tab phía trước' : 'Xem thêm tab'}
+      tabIndex={-1}
+      onClick={() => nudge(dir)}
+    >
+      <span>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d={dir < 0 ? 'M14.5 6l-6 6 6 6' : 'M9.5 6l6 6-6 6'} />
+        </svg>
+      </span>
+    </button>
+  )
+
+  return (
+    <div className="tabs-wrap" data-left={edges.left || undefined} data-right={edges.right || undefined}>
+      <div ref={ref} className={`guide-modes ${className}`} role="tablist" id={id} aria-label={label}>
+        {children}
+      </div>
+      {edges.left && arrow(-1)}
+      {edges.right && arrow(1)}
+    </div>
+  )
+}
+
+// Thanh tab dạng khối (cùng kiểu với thanh chọn chế độ luyện viết)
 export function Tabs({ tabs, value, onChange, id }) {
   return (
-    <div className="tabs" role="tablist" id={id}>
+    <TabBar value={value} id={id} className="page-tabs">
       {tabs.map((t) => (
         <button
           key={t.value}
           type="button"
           role="tab"
           aria-selected={value === t.value}
-          className={value === t.value ? 'tab active' : 'tab'}
+          className={value === t.value ? 'mode-btn active' : 'mode-btn'}
           onClick={() => onChange(t.value)}
         >
           {t.label}
         </button>
       ))}
-    </div>
+    </TabBar>
   )
 }
 

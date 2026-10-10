@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState } from 'react'
 import HanziWriter from 'hanzi-writer'
 import { hanziWriterLoader, loadStrokeData, isHan } from '../lib/strokes'
 import { allWords } from '../data/hsk'
-import { MiGrid, Py, SpeakBtn } from './ui'
+import { MiGrid, Py, SpeakBtn, TabBar } from './ui'
 
 const MODES = [
   { value: 'watch', label: 'Xem cách viết' },
@@ -31,7 +31,7 @@ function charInfo(c) {
 function readColors() {
   const cs = getComputedStyle(document.documentElement)
   const v = (n) => cs.getPropertyValue(n).trim()
-  return { ink: v('--ink'), seal: v('--seal'), line: v('--line'), jade: v('--jade'), muted: v('--muted'), sheet: v('--sheet') }
+  return { ink: v('--ink'), seal: v('--seal'), hl: v('--t1'), line: v('--line'), jade: v('--jade'), muted: v('--muted'), sheet: v('--sheet') }
 }
 function useThemeColors() {
   const [colors, setColors] = useState(readColors)
@@ -107,7 +107,7 @@ function StaticChar({ data, upto, colors, arrow = false, size, label }) {
       </defs>
       <g transform="translate(0, 900) scale(1, -1)">
         {data.strokes.map((d, i) => (
-          <path key={i} d={d} fill={i < cur ? colors.ink : i === cur ? colors.seal : colors.line} />
+          <path key={i} d={d} fill={i < cur ? colors.ink : i === cur ? colors.hl : colors.line} />
         ))}
         {median && (
           <>
@@ -165,7 +165,7 @@ function WriterBox({ char, mode, size, colors, speed, loop, quizOpts, onQuizUpda
       delayBetweenStrokes: sp.delay,
       delayBetweenLoops: 1200,
       strokeColor: colors.ink,
-      radicalColor: colors.seal,
+      radicalColor: colors.hl,
       outlineColor: colors.line,
       highlightColor: colors.jade,
       drawingColor: colors.jade,
@@ -244,13 +244,20 @@ export default function StrokeGuide({ char: charProp, onCharChange }) {
 
   return (
     <div className="guide">
-      <div className="seg guide-modes" role="tablist" aria-label="Chế độ luyện viết">
+      <TabBar value={mode} label="Chế độ luyện viết">
         {MODES.map((m) => (
-          <button key={m.value} type="button" role="tab" aria-selected={mode === m.value} className={mode === m.value ? 'active' : ''} onClick={() => setMode(m.value)}>
+          <button
+            key={m.value}
+            type="button"
+            role="tab"
+            aria-selected={mode === m.value}
+            className={mode === m.value ? 'mode-btn active' : 'mode-btn'}
+            onClick={() => setMode(m.value)}
+          >
             {m.label}
           </button>
         ))}
-      </div>
+      </TabBar>
 
       <div className="write">
         <div className="guide-stage">

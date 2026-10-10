@@ -55,7 +55,7 @@ function NavContent({ onNavigate }) {
 function Brand({ onNavigate }) {
   return (
     <NavLink to="/" className="brand" onClick={onNavigate}>
-      <span className="brand-seal hz" aria-hidden="true">汉</span>
+      <img className="brand-seal" src="./favicon.svg" alt="" width="46" height="46" />
       <span className="brand-name">
         Lộ Trình<br />Hán Ngữ
       </span>

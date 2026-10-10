@@ -15,11 +15,11 @@ export function applyTheme(mode) {
 }
 
 export function initTheme() {
-  applyTheme(load('theme', 'system'))
+  applyTheme(load('theme', 'light'))
 }
 
 export function useTheme() {
-  const [mode, setMode] = useState(() => load('theme', 'system'))
+  const [mode, setMode] = useState(() => load('theme', 'light'))
   useEffect(() => {
     applyTheme(mode)
     save('theme', mode)
