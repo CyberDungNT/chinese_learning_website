@@ -38,10 +38,34 @@ Ngữ pháp thêm trong `src/data/grammar.js`.
 ## Nút liên hệ
 Nút "Liên hệ" nổi ở góc dưới bên phải, bấm vào sẽ mở link trong tab mới. Đổi link trong `src/config.js`:
 ```js
-export const CONTACT_URL = 'https://www.facebook.com/z.nguyentiendung'
+export const CONTACT_URL = 'https://zalo.me/0912345678'
 ```
 Hoặc truyền khi build, không cần sửa code:
 ```bash
 VITE_CONTACT_URL=https://m.me/tenfanpage VITE_CONTACT_LABEL="Nhắn tin" npm run build
 ```
 Để `CONTACT_URL = ''` thì nút sẽ ẩn.
+
+## Deploy lên GitHub Pages
+Dự án đã có sẵn `.github/workflows/deploy.yml`: mỗi lần đẩy code lên nhánh `main`, GitHub tự build và đăng web.
+1. Tạo repository mới trên GitHub (ví dụ `hoc-tieng-trung`), để Public.
+2. Đẩy code lên:
+   ```bash
+   git init
+   git add .
+   git commit -m "Lộ Trình Hán Ngữ"
+   git branch -M main
+   git remote add origin https://github.com/<tên-bạn>/hoc-tieng-trung.git
+   git push -u origin main
+   ```
+3. Trên GitHub: **Settings → Pages → Source: GitHub Actions**.
+4. (Tùy chọn) **Settings → Secrets and variables → Actions → Variables**: thêm `CONTACT_URL` (và `CONTACT_LABEL`) cho nút liên hệ.
+5. Vào tab **Actions**, đợi khoảng 1–2 phút. Web có tại `https://<tên-bạn>.github.io/hoc-tieng-trung/`.
+
+Web dùng `HashRouter` và `base: './'` nên chạy đúng trên GitHub Pages, không bị lỗi 404 khi tải lại trang.
+
+## Hướng dẫn viết từng nét
+Tab **Chữ Hán & bộ thủ → Luyện viết** có 4 chế độ: xem hoạt hình thứ tự nét, xem từng nét (có điểm đặt bút và mũi tên hướng viết), tự viết theo nét (máy chấm từng nét, gợi ý khi sai) và viết tự do.
+- Thư viện: [Hanzi Writer](https://hanziwriter.org) (MIT).
+- Dữ liệu nét: [Make Me a Hanzi](https://github.com/skishore/makemeahanzi) qua gói `hanzi-writer-data` (Arphic Public License, xem `src/data/LICENSE-stroke-data-ARPHICPL.txt`).
+- `scripts/build-strokes.mjs` tự chạy trước `npm run dev`/`npm run build`, gom dữ liệu của khoảng 2660 chữ dùng trong web vào `public/strokes/` (64 file, tải khi cần). Chữ ngoài danh sách sẽ được tải từ CDN jsDelivr nếu có mạng.

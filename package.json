@@ -8,9 +8,14 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "build:single": "vite build --mode single"
+    "build:single": "vite build --mode single",
+    "prebuild": "node scripts/build-strokes.mjs",
+    "predev": "node scripts/build-strokes.mjs",
+    "prebuild:single": "node scripts/build-strokes.mjs"
   },
   "dependencies": {
+    "hanzi-writer": "^3.7.3",
+    "hanzi-writer-data": "^2.0.1",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"

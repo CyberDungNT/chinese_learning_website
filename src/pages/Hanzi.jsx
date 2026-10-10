@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { strokes, strokeRules, radicals, structures } from '../data/hanzi'
-import { MiGrid, Py, SpeakBtn, Tabs } from '../components/ui'
+import { Py, SpeakBtn, Tabs } from '../components/ui'
+import StrokeGuide from '../components/StrokeGuide'
 
 const tabs = [
   { value: 'strokes', label: 'Nét cơ bản' },
@@ -8,8 +9,6 @@ const tabs = [
   { value: 'radicals', label: 'Bộ thủ' },
   { value: 'write', label: 'Luyện viết' },
 ]
-
-const practiceSet = '人口大小中国你好学生月日水火木山'
 
 export default function Hanzi() {
   const [tab, setTab] = useState('strokes')
@@ -79,34 +78,7 @@ export default function Hanzi() {
 
       {tab === 'radicals' && <Radicals onPractice={practice} />}
 
-      {tab === 'write' && (
-        <div className="write">
-          <MiGrid char={char} />
-          <div className="write-side">
-            <h3>Luyện viết trên ô 米</h3>
-            <p className="small">
-              Ô chữ 米 (米字格) có đường kẻ ngang, dọc và hai đường chéo giúp bạn căn tỷ lệ. Viết theo chữ mờ vài lần,
-              sau đó ẩn chữ mờ và tự viết lại. Dùng chuột, bút cảm ứng hoặc ngón tay.
-            </p>
-            <label htmlFor="write-char" className="field-lbl">Chữ muốn luyện</label>
-            <input
-              id="write-char"
-              className="input hz"
-              value={char}
-              maxLength={2}
-              onChange={(e) => {
-                const c = [...e.target.value].pop()
-                if (c) setChar(c)
-              }}
-            />
-            <div className="chips">
-              {[...practiceSet].map((c) => (
-                <button key={c} type="button" className={c === char ? 'chip active hz' : 'chip hz'} onClick={() => setChar(c)}>{c}</button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
+      {tab === 'write' && <StrokeGuide char={char} onCharChange={setChar} />}
     </div>
   )
 }
